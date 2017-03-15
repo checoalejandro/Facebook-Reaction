@@ -33,11 +33,13 @@ public class ReactionView extends View {
 
     private Board board;
 
-    private Emotion[] emotions = new Emotion[6];
+    private IconOption[] iconOptions = new IconOption[6];
 
     private StateDraw state = StateDraw.BEGIN;
 
     private int currentPosition = 0;
+
+    private OnItemSelected mOnItemSelected;
 
     public ReactionView(Context context) {
         super(context);
@@ -58,19 +60,19 @@ public class ReactionView extends View {
         board = new Board(getContext());
         setLayerType(LAYER_TYPE_SOFTWARE, board.boardPaint);
 
-        emotions[0] = new Emotion(getContext(), "Like", R.drawable.like);
-        emotions[1] = new Emotion(getContext(), "Love", R.drawable.love);
-        emotions[2] = new Emotion(getContext(), "Haha", R.drawable.haha);
-        emotions[3] = new Emotion(getContext(), "Wow", R.drawable.wow);
-        emotions[4] = new Emotion(getContext(), "Cry", R.drawable.cry);
-        emotions[5] = new Emotion(getContext(), "Angry", R.drawable.angry);
+        iconOptions[0] = new IconOption(getContext(), "Like", R.drawable.like);
+        iconOptions[1] = new IconOption(getContext(), "Love", R.drawable.love);
+        iconOptions[2] = new IconOption(getContext(), "Haha", R.drawable.haha);
+        iconOptions[3] = new IconOption(getContext(), "Wow", R.drawable.wow);
+        iconOptions[4] = new IconOption(getContext(), "Cry", R.drawable.cry);
+        iconOptions[5] = new IconOption(getContext(), "Angry", R.drawable.angry);
 
         initElement();
     }
 
     private void initElement() {
         board.currentY = CommonDimen.HEIGHT_VIEW_REACTION + 10;
-        for (Emotion e : emotions) {
+        for (IconOption e : iconOptions) {
             e.currentY = board.currentY + CommonDimen.DIVIDE;
         }
     }
@@ -79,8 +81,8 @@ public class ReactionView extends View {
     protected void onDraw(Canvas canvas) {
         if (state != null) {
             board.drawBoard(canvas);
-            for (Emotion emotion : emotions) {
-                emotion.drawEmotion(canvas);
+            for (IconOption iconOption : iconOptions) {
+                iconOption.drawEmotion(canvas);
             }
         }
     }
@@ -94,10 +96,10 @@ public class ReactionView extends View {
 
         easeOutBack = EaseOutBack.newInstance(DURATION_BEGINNING_EACH_ITEM, Math.abs(board.beginY - board.endY), 0);
 
-        for (int i = 0; i < emotions.length; i++) {
-            emotions[i].endY = Board.BASE_LINE - Emotion.NORMAL_SIZE;
-            emotions[i].beginY = Board.BOARD_BOTTOM + 150;
-            emotions[i].currentX = i == 0 ? Board.BOARD_X + DIVIDE : emotions[i - 1].currentX + emotions[i - 1].currentSize + DIVIDE;
+        for (int i = 0; i < iconOptions.length; i++) {
+            iconOptions[i].endY = Board.BASE_LINE - IconOption.NORMAL_SIZE;
+            iconOptions[i].beginY = Board.BOARD_BOTTOM + 150;
+            iconOptions[i].currentX = i == 0 ? Board.BOARD_X + DIVIDE : iconOptions[i - 1].currentX + iconOptions[i - 1].currentSize + DIVIDE;
         }
     }
 
@@ -110,10 +112,10 @@ public class ReactionView extends View {
 
         easeOutBack = EaseOutBack.newInstance(DURATION_BEGINNING_EACH_ITEM, Math.abs(board.beginY - board.endY), 0);
 
-        for (int i = 0; i < emotions.length; i++) {
-            emotions[i].endY = Board.BOARD_BOTTOM + 150;
-            emotions[i].beginY = Board.BASE_LINE - Emotion.NORMAL_SIZE;
-            emotions[i].currentX = i == 0 ? Board.BOARD_X + DIVIDE : emotions[i - 1].currentX + emotions[i - 1].currentSize + DIVIDE;
+        for (int i = 0; i < iconOptions.length; i++) {
+            iconOptions[i].endY = Board.BOARD_BOTTOM + 150;
+            iconOptions[i].beginY = Board.BASE_LINE - IconOption.NORMAL_SIZE;
+            iconOptions[i].currentX = i == 0 ? Board.BOARD_X + DIVIDE : iconOptions[i - 1].currentX + iconOptions[i - 1].currentSize + DIVIDE;
         }
     }
 
@@ -122,13 +124,13 @@ public class ReactionView extends View {
         board.beginHeight = board.getCurrentHeight();
         board.endHeight = Board.BOARD_HEIGHT_MINIMAL;
 
-        for (int i = 0; i < emotions.length; i++) {
-            emotions[i].beginSize = emotions[i].currentSize;
+        for (int i = 0; i < iconOptions.length; i++) {
+            iconOptions[i].beginSize = iconOptions[i].currentSize;
 
             if (i == currentPosition) {
-                emotions[i].endSize = Emotion.CHOOSE_SIZE;
+                iconOptions[i].endSize = IconOption.CHOOSE_SIZE;
             } else {
-                emotions[i].endSize = Emotion.MINIMAL_SIZE;
+                iconOptions[i].endSize = IconOption.MINIMAL_SIZE;
             }
         }
     }
@@ -137,9 +139,9 @@ public class ReactionView extends View {
         board.beginHeight = board.getCurrentHeight();
         board.endHeight = Board.BOARD_HEIGHT_NORMAL;
 
-        for (int i = 0; i < emotions.length; i++) {
-            emotions[i].beginSize = emotions[i].currentSize;
-            emotions[i].endSize = Emotion.NORMAL_SIZE;
+        for (int i = 0; i < iconOptions.length; i++) {
+            iconOptions[i].beginSize = iconOptions[i].currentSize;
+            iconOptions[i].endSize = IconOption.NORMAL_SIZE;
         }
     }
 
@@ -147,9 +149,9 @@ public class ReactionView extends View {
     private void calculateInSessionChoosingAndEnding(float interpolatedTime) {
         board.setCurrentHeight(board.beginHeight + (int) (interpolatedTime * (board.endHeight - board.beginHeight)));
 
-        for (int i = 0; i < emotions.length; i++) {
-            emotions[i].currentSize = calculateSize(i, interpolatedTime);
-            emotions[i].currentY = Board.BASE_LINE - emotions[i].currentSize;
+        for (int i = 0; i < iconOptions.length; i++) {
+            iconOptions[i].currentSize = calculateSize(i, interpolatedTime);
+            iconOptions[i].currentY = Board.BASE_LINE - iconOptions[i].currentSize;
         }
         calculateCoordinateX();
         invalidate();
@@ -163,27 +165,27 @@ public class ReactionView extends View {
         }
 
         if (currentTime >= 100) {
-            emotions[0].currentY = emotions[0].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 100, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[0].currentY = iconOptions[0].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 100, DURATION_BEGINNING_EACH_ITEM));
         }
 
         if (currentTime >= 200) {
-            emotions[1].currentY = emotions[1].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 200, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[1].currentY = iconOptions[1].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 200, DURATION_BEGINNING_EACH_ITEM));
         }
 
         if (currentTime >= 300) {
-            emotions[2].currentY = emotions[2].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 300, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[2].currentY = iconOptions[2].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 300, DURATION_BEGINNING_EACH_ITEM));
         }
 
         if (currentTime >= 400) {
-            emotions[3].currentY = emotions[3].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 400, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[3].currentY = iconOptions[3].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 400, DURATION_BEGINNING_EACH_ITEM));
         }
 
         if (currentTime >= 500) {
-            emotions[4].currentY = emotions[4].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 500, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[4].currentY = iconOptions[4].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 500, DURATION_BEGINNING_EACH_ITEM));
         }
 
         if (currentTime >= 600) {
-            emotions[5].currentY = emotions[5].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 600, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[5].currentY = iconOptions[5].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 600, DURATION_BEGINNING_EACH_ITEM));
         }
 
         invalidate();
@@ -197,54 +199,54 @@ public class ReactionView extends View {
         }
 
         if (currentTime >= 100) {
-            emotions[0].currentY = emotions[0].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 100, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[0].currentY = iconOptions[0].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 100, DURATION_BEGINNING_EACH_ITEM));
         }
 
         if (currentTime >= 200) {
-            emotions[1].currentY = emotions[1].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 200, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[1].currentY = iconOptions[1].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 200, DURATION_BEGINNING_EACH_ITEM));
         }
 
         if (currentTime >= 300) {
-            emotions[2].currentY = emotions[2].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 300, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[2].currentY = iconOptions[2].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 300, DURATION_BEGINNING_EACH_ITEM));
         }
 
         if (currentTime >= 400) {
-            emotions[3].currentY = emotions[3].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 400, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[3].currentY = iconOptions[3].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 400, DURATION_BEGINNING_EACH_ITEM));
         }
 
         if (currentTime >= 500) {
-            emotions[4].currentY = emotions[4].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 500, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[4].currentY = iconOptions[4].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 500, DURATION_BEGINNING_EACH_ITEM));
         }
 
         if (currentTime >= 600) {
-            emotions[5].currentY = emotions[5].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 600, DURATION_BEGINNING_EACH_ITEM));
+            iconOptions[5].currentY = iconOptions[5].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 600, DURATION_BEGINNING_EACH_ITEM));
         }
 
         invalidate();
     }
 
     private int calculateSize(int position, float interpolatedTime) {
-        int changeSize = emotions[position].endSize - emotions[position].beginSize;
-        return emotions[position].beginSize + (int) (interpolatedTime * changeSize);
+        int changeSize = iconOptions[position].endSize - iconOptions[position].beginSize;
+        return iconOptions[position].beginSize + (int) (interpolatedTime * changeSize);
     }
 
     private void calculateCoordinateX() {
-        emotions[0].currentX = Board.BOARD_X + DIVIDE;
-        emotions[emotions.length - 1].currentX = Board.BOARD_X + Board.BOARD_WIDTH - DIVIDE - emotions[emotions.length - 1].currentSize;
+        iconOptions[0].currentX = Board.BOARD_X + DIVIDE;
+        iconOptions[iconOptions.length - 1].currentX = Board.BOARD_X + Board.BOARD_WIDTH - DIVIDE - iconOptions[iconOptions.length - 1].currentSize;
 
         for (int i = 1; i < currentPosition; i++) {
-            emotions[i].currentX = emotions[i - 1].currentX + emotions[i - 1].currentSize + DIVIDE;
+            iconOptions[i].currentX = iconOptions[i - 1].currentX + iconOptions[i - 1].currentSize + DIVIDE;
         }
 
-        for (int i = emotions.length - 2; i > currentPosition; i--) {
-            emotions[i].currentX = emotions[i + 1].currentX - emotions[i].currentSize - DIVIDE;
+        for (int i = iconOptions.length - 2; i > currentPosition; i--) {
+            iconOptions[i].currentX = iconOptions[i + 1].currentX - iconOptions[i].currentSize - DIVIDE;
         }
 
-        if (currentPosition != 0 && currentPosition != emotions.length - 1) {
-            if (currentPosition <= (emotions.length / 2 - 1)) {
-                emotions[currentPosition].currentX = emotions[currentPosition - 1].currentX + emotions[currentPosition - 1].currentSize + DIVIDE;
+        if (currentPosition != 0 && currentPosition != iconOptions.length - 1) {
+            if (currentPosition <= (iconOptions.length / 2 - 1)) {
+                iconOptions[currentPosition].currentX = iconOptions[currentPosition - 1].currentX + iconOptions[currentPosition - 1].currentSize + DIVIDE;
             } else {
-                emotions[currentPosition].currentX = emotions[currentPosition + 1].currentX - emotions[currentPosition].currentSize - DIVIDE;
+                iconOptions[currentPosition].currentX = iconOptions[currentPosition + 1].currentX - iconOptions[currentPosition].currentSize - DIVIDE;
             }
         }
     }
@@ -270,11 +272,19 @@ public class ReactionView extends View {
         currentPosition = position;
 
         startAnimation(new ChooseEmotionAnimation());
+
+        if (mOnItemSelected != null) {
+            mOnItemSelected.onItemSelected(iconOptions[position], position);
+        }
     }
 
     public void backToNormal() {
         state = StateDraw.NORMAL;
         startAnimation(new ChooseEmotionAnimation());
+    }
+
+    public void setOnItemSelected(OnItemSelected mOnItemSelected) {
+        this.mOnItemSelected = mOnItemSelected;
     }
 
     @Override
@@ -285,8 +295,8 @@ public class ReactionView extends View {
                 handled = true;
                 break;
             case MotionEvent.ACTION_MOVE:
-                for (int i = 0; i < emotions.length; i++) {
-                    if (event.getX() > emotions[i].currentX && event.getX() < emotions[i].currentX + emotions[i].currentSize) {
+                for (int i = 0; i < iconOptions.length; i++) {
+                    if (event.getX() > iconOptions[i].currentX && event.getX() < iconOptions[i].currentX + iconOptions[i].currentSize) {
                         selected(i);
                         break;
                     }
@@ -341,5 +351,9 @@ public class ReactionView extends View {
         protected void applyTransformation(float interpolatedTime, Transformation t) {
             calculateInSessionEnding(interpolatedTime);
         }
+    }
+
+    public interface OnItemSelected {
+        void onItemSelected(IconOption iconOption, int index);
     }
 }

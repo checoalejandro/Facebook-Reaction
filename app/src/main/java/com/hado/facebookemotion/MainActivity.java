@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,5 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnHide.setOnClickListener(view -> reactionView.hide());
         btnLike.setOnClickListener(view -> reactionView.show());
+
+        reactionView.setOnItemSelected((iconOption, index) -> Toast.makeText(this, "Option " + index, Toast.LENGTH_SHORT).show());
     }
 }

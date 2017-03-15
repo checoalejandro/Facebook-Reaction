@@ -12,7 +12,7 @@ import android.graphics.RectF;
 
 public class Board {
 
-    public static final int BOARD_WIDTH = 6 * Emotion.NORMAL_SIZE + 7 * CommonDimen.DIVIDE; //DIVIDE = 5dp, Emotion.NORMAL_SIZE = 40dp
+    public static final int BOARD_WIDTH = 6 * IconOption.NORMAL_SIZE + 7 * CommonDimen.DIVIDE; //DIVIDE = 5dp, IconOption.NORMAL_SIZE = 40dp
 
     public static final int BOARD_HEIGHT_NORMAL = Util.dpToPx(50);
 
@@ -24,7 +24,7 @@ public class Board {
 
     public static final float BOARD_Y = BOARD_BOTTOM - BOARD_HEIGHT_NORMAL;
 
-    public static final float BASE_LINE = BOARD_Y + Emotion.NORMAL_SIZE + CommonDimen.DIVIDE;
+    public static final float BASE_LINE = BOARD_Y + IconOption.NORMAL_SIZE + CommonDimen.DIVIDE;
 
     public Paint boardPaint;
 

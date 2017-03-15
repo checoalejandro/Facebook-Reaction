@@ -14,7 +14,7 @@ import android.widget.TextView;
  * Created by Hado on 27-Nov-16.
  */
 
-public class Emotion {
+public class IconOption {
     private Context context;
 
     public static final int MINIMAL_SIZE = Util.dpToPx(28);
@@ -52,7 +52,7 @@ public class Emotion {
     private float ratioWH;
 
 
-    public Emotion(Context context, String title, int imageResource) {
+    public IconOption(Context context, String title, int imageResource) {
         this.context = context;
 
         imageOrigin = BitmapFactory.decodeResource(context.getResources(), imageResource);
