@@ -18,4 +18,11 @@
         android:layout_height="50dp"
         android:layout_below="@+id/view_reaction"
         android:text="Like" />
+
+    <Button
+        android:id="@+id/btnHide"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/btn_like"
+        android:text="Hide" />
 </RelativeLayout>

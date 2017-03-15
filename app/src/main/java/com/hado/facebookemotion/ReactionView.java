@@ -18,6 +18,7 @@ public class ReactionView extends View {
 
     enum StateDraw {
         BEGIN,
+        END,
         CHOOSING,
         NORMAL
     }
@@ -100,6 +101,22 @@ public class ReactionView extends View {
         }
     }
 
+    private void beforeAnimateEnding() {
+        board.beginHeight = Board.BOARD_HEIGHT_NORMAL;
+        board.endHeight = Board.BOARD_HEIGHT_NORMAL;
+
+        board.beginY = Board.BOARD_Y;
+        board.endY = Board.BOARD_BOTTOM + 150;
+
+        easeOutBack = EaseOutBack.newInstance(DURATION_BEGINNING_EACH_ITEM, Math.abs(board.beginY - board.endY), 0);
+
+        for (int i = 0; i < emotions.length; i++) {
+            emotions[i].endY = Board.BOARD_BOTTOM + 150;
+            emotions[i].beginY = Board.BASE_LINE - Emotion.NORMAL_SIZE;
+            emotions[i].currentX = i == 0 ? Board.BOARD_X + DIVIDE : emotions[i - 1].currentX + emotions[i - 1].currentSize + DIVIDE;
+        }
+    }
+
 
     private void beforeAnimateChoosing() {
         board.beginHeight = board.getCurrentHeight();
@@ -172,6 +189,40 @@ public class ReactionView extends View {
         invalidate();
     }
 
+    private void calculateInSessionEnding(float interpolatedTime) {
+        float currentTime = interpolatedTime * DURATION_BEGINNING_ANIMATION;
+
+        if (currentTime > 0) {
+            board.currentY = board.endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime, DURATION_BEGINNING_EACH_ITEM));
+        }
+
+        if (currentTime >= 100) {
+            emotions[0].currentY = emotions[0].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 100, DURATION_BEGINNING_EACH_ITEM));
+        }
+
+        if (currentTime >= 200) {
+            emotions[1].currentY = emotions[1].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 200, DURATION_BEGINNING_EACH_ITEM));
+        }
+
+        if (currentTime >= 300) {
+            emotions[2].currentY = emotions[2].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 300, DURATION_BEGINNING_EACH_ITEM));
+        }
+
+        if (currentTime >= 400) {
+            emotions[3].currentY = emotions[3].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 400, DURATION_BEGINNING_EACH_ITEM));
+        }
+
+        if (currentTime >= 500) {
+            emotions[4].currentY = emotions[4].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 500, DURATION_BEGINNING_EACH_ITEM));
+        }
+
+        if (currentTime >= 600) {
+            emotions[5].currentY = emotions[5].endY - easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 600, DURATION_BEGINNING_EACH_ITEM));
+        }
+
+        invalidate();
+    }
+
     private int calculateSize(int position, float interpolatedTime) {
         int changeSize = emotions[position].endSize - emotions[position].beginSize;
         return emotions[position].beginSize + (int) (interpolatedTime * changeSize);
@@ -203,6 +254,13 @@ public class ReactionView extends View {
         setVisibility(VISIBLE);
         beforeAnimateBeginning();
         startAnimation(new BeginningAnimation());
+    }
+
+    public void hide() {
+        state = StateDraw.END;
+        setVisibility(INVISIBLE);
+        beforeAnimateNormalBack();
+        startAnimation(new EndingAnimation());
     }
 
     private void selected(int position) {
@@ -269,6 +327,19 @@ public class ReactionView extends View {
         @Override
         protected void applyTransformation(float interpolatedTime, Transformation t) {
             calculateInSessionBeginning(interpolatedTime);
+        }
+    }
+
+    class EndingAnimation extends Animation {
+
+        public EndingAnimation() {
+            beforeAnimateEnding();
+            setDuration(DURATION_BEGINNING_ANIMATION);
+        }
+
+        @Override
+        protected void applyTransformation(float interpolatedTime, Transformation t) {
+            calculateInSessionEnding(interpolatedTime);
         }
     }
 }

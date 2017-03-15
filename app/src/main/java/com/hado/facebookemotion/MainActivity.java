@@ -7,7 +7,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnLike;
+    Button btnLike, btnHide;
     ReactionView reactionView;
 
     @Override
@@ -19,9 +19,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         btnLike = (Button) findViewById(R.id.btn_like);
+        btnHide = (Button) findViewById(R.id.btnHide);
         reactionView = (ReactionView) findViewById(R.id.view_reaction);
         reactionView.setVisibility(View.INVISIBLE);
 
+        btnHide.setOnClickListener(view -> reactionView.hide());
         btnLike.setOnClickListener(view -> reactionView.show());
     }
 }
