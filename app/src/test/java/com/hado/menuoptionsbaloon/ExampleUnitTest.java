@@ -1,4 +1,4 @@
-package com.hado.facebookemotion;
+package com.hado.menuoptionsbaloon;
 
 import org.junit.Test;
 

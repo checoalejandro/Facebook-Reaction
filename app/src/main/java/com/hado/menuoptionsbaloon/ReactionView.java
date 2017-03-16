@@ -1,4 +1,4 @@
-package com.hado.facebookemotion;
+package com.hado.menuoptionsbaloon;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,7 +12,7 @@ import android.view.animation.Transformation;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hado.facebookemotion.CommonDimen.DIVIDE;
+import static com.hado.menuoptionsbaloon.CommonDimen.DIVIDE;
 
 /**
  * Created by Hado on 26-Nov-16.
@@ -62,7 +62,7 @@ public class ReactionView extends View {
 
     public void setOptions(@NonNull List<IconOption> options) {
         iconOptions = options;
-        DURATION_BEGINNING_ANIMATION = iconOptions.size() * 150;
+        DURATION_BEGINNING_ANIMATION = (iconOptions.size() * 150) + 150;
         init();
         invalidate();
     }

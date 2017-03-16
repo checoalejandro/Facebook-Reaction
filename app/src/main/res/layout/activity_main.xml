@@ -4,9 +4,9 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hado.facebookemotion.MainActivity">
+    tools:context="com.hado.menuoptionsbaloon.com.hado.menuoptionsbaloon.MainActivity">
 
-    <com.hado.facebookemotion.ReactionView
+    <com.hado.menuoptionsbaloon.ReactionView
         android:id="@+id/view_reaction"
         android:layout_marginLeft="10dp"
         android:layout_marginEnd="10dp"

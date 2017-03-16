@@ -1,4 +1,4 @@
-package com.hado.facebookemotion;
+package com.hado.menuoptionsbaloon;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         iconOptions.add(new IconOption(reactionView, "Wow", R.drawable.wow));
         iconOptions.add(new IconOption(reactionView, "Cry", R.drawable.cry));
         iconOptions.add(new IconOption(reactionView, "Angry", R.drawable.angry));
-        iconOptions.add(new IconOption(reactionView, "Angry 2", R.drawable.angry));
+//        iconOptions.add(new IconOption(reactionView, "Angry 2", R.drawable.angry));
         //iconOptions.add(new IconOption(reactionView, "Angry 3", R.drawable.like));
         reactionView.setOptions(iconOptions);
     }

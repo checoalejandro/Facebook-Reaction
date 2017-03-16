@@ -1,4 +1,4 @@
-package com.hado.facebookemotion;
+package com.hado.menuoptionsbaloon;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
