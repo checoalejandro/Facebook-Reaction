@@ -51,9 +51,13 @@ public class IconOption {
 
     private float ratioWH;
 
+    private ReactionView reactionView;
 
-    public IconOption(Context context, String title, int imageResource) {
+
+    public IconOption(ReactionView reactionView, String title, int imageResource) {
+        Context context = reactionView.getContext();
         this.context = context;
+        this.reactionView = reactionView;
 
         imageOrigin = BitmapFactory.decodeResource(context.getResources(), imageResource);
 
@@ -91,7 +95,7 @@ public class IconOption {
     }
 
     public void drawTitle(Canvas canvas) {
-        int width = (currentSize - NORMAL_SIZE) * 7 / 6;
+        int width = (currentSize - NORMAL_SIZE) * 7 / reactionView.getItemCount();
         int height = (int) (width / ratioWH);
 
         setAlphaTitle(Math.min(CommonDimen.MAX_ALPHA * width / MAX_WIDTH_TITLE, CommonDimen.MAX_ALPHA));

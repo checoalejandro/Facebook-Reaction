@@ -12,7 +12,7 @@ import android.graphics.RectF;
 
 public class Board {
 
-    public static final int BOARD_WIDTH = 6 * IconOption.NORMAL_SIZE + 7 * CommonDimen.DIVIDE; //DIVIDE = 5dp, IconOption.NORMAL_SIZE = 40dp
+    public static int BOARD_WIDTH = 6 * IconOption.NORMAL_SIZE + 7 * CommonDimen.DIVIDE; //DIVIDE = 5dp, IconOption.NORMAL_SIZE = 40dp
 
     public static final int BOARD_HEIGHT_NORMAL = Util.dpToPx(50);
 
@@ -40,12 +40,16 @@ public class Board {
 
     public float endY;
 
+    private int itemCount;
 
-    public Board(Context context) {
+    public Board(Context context, int itemCount) {
+        this.itemCount = itemCount;
         initPaint(context);
     }
 
     private void initPaint(Context context) {
+        BOARD_WIDTH = (itemCount * IconOption.NORMAL_SIZE) + ((itemCount + 1) * CommonDimen.DIVIDE);
+
         boardPaint = new Paint();
         boardPaint.setAntiAlias(true);
         boardPaint.setStyle(Paint.Style.FILL);
